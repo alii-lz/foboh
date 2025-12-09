@@ -15,6 +15,8 @@ const createContext = async (req: NextRequest) => {
   });
 };
 
+export type Context = Awaited<ReturnType<typeof createContext>>;
+
 const handler = (req: NextRequest) =>
   fetchRequestHandler({
     endpoint: "/api/trpc",

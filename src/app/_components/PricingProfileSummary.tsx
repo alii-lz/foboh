@@ -43,7 +43,7 @@ export default function PricingProfileSummary({
     return (
       <>
         <span className="font-bold">
-          {type} {operator}
+          {type} {operator} {"\u00A0"}
         </span>
         of {amount}
         {suffix}
@@ -59,7 +59,7 @@ export default function PricingProfileSummary({
             <p className="text-sm text-gray-600">
               You&apos;ve selected
               <span className="font-semibold text-gray-900">
-                {selectedProductCount} Product
+                {"\u00A0"} {selectedProductCount} Product
                 {selectedProductCount !== 1 ? "s" : ""}
               </span>
             </p>

@@ -80,6 +80,7 @@ export default function PricingProfileList() {
                 <p className="mt-2 text-sm text-gray-600">
                   Based on:
                   <span className="font-medium text-gray-900">
+                    {"\u00A0"}
                     {profile.basedOnTitle}
                   </span>
                 </p>

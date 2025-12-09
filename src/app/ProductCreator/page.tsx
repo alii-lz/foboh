@@ -84,7 +84,7 @@ export default function ProductCreator() {
     <div className="min-h-screen bg-gray-50">
       <div className="p-8 pb-0">
         <Link
-          href="/"
+          href="/Dashboard"
           className="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-gray-700 transition hover:bg-gray-200"
         >
           <ArrowLeft size={16} />

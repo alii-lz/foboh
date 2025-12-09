@@ -516,7 +516,7 @@ export default function Home() {
                         <option value="">Brand</option>
                         <option value="high garden">High Garden</option>
                         <option value="koyama wines">Koyama Wines</option>
-                        <option value="lacourte-godbillon">
+                        <option value="lacourtegodbillon">
                           Lacourte-Godbillon
                         </option>
                       </select>
@@ -628,12 +628,14 @@ export default function Home() {
                       <div className="mt-6 text-gray-600">
                         You&apos;ve selected
                         <span className="font-semibold text-gray-900">
+                          {"\u00A0"}
                           {selectedCount} Product
                           {selectedCount !== 1 ? "s" : ""}
                         </span>
-                        , these will be added
+                        , these will be added to
                         <span className="font-semibold text-gray-900">
-                          {"{Profile Name}"}
+                          {"\u00A0"}
+                          {profileTitle}
                         </span>
                       </div>
                     )}

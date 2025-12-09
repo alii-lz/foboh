@@ -56,7 +56,7 @@ async function resolveBasePrice(
   const finalAdjustment =
     profile.adjustmentOperator === "DECREASE" ? -adjustment : adjustment;
 
-  return parentPrice + finalAdjustment;
+  return Math.max(0, parentPrice + finalAdjustment);
 }
 
 export const productRouter = createTRPCRouter({

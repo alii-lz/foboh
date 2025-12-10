@@ -1,0 +1,355 @@
+openapi: 3.0.3
+info:
+  title: Product & Pricing Profile API
+  description: API for managing products and pricing profiles with dynamic price calculations
+  version: 1.0.0
+  contact:
+    name: API Support
+
+servers:
+  - url: https://foboh.vercel.app
+    description: Production server
+  - url: http://localhost:3000
+    description: Development server
+
+tags:
+  - name: Products
+    description: Product management endpoints
+  - name: Pricing Profiles
+    description: Pricing profile management endpoints
+
+paths:
+  /api/trpc/product.create:
+    post:
+      tags:
+        - Products
+      summary: Create a new product
+      description: Creates a new product with the specified details
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProductRequest"
+      responses:
+        "200":
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/trpc/product.getAll:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      description: Retrieves all products ordered by title
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/trpc/product.getByIds:
+    post:
+      tags:
+        - Products
+      summary: Get products by IDs with calculated prices
+      description: Retrieves multiple products by their IDs with dynamically calculated base prices based on a pricing profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetProductsByIdsRequest"
+      responses:
+        "200":
+          description: List of products with calculated prices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductWithCalculatedPrice"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/trpc/product.update:
+    put:
+      tags:
+        - Products
+      summary: Update a product
+      description: Updates an existing product with partial data
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProductRequest"
+      responses:
+        "200":
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/trpc/product.delete:
+    delete:
+      tags:
+        - Products
+      summary: Delete a product
+      description: Deletes a product by ID
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  description: Product UUID
+      responses:
+        "200":
+          description: Product deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "400":
+          description: Invalid ID format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/trpc/pricingProfile.create:
+    post:
+      tags:
+        - Pricing Profiles
+      summary: Create a new pricing profile
+      description: Creates a new pricing profile with adjustment rules and optional product associations
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePricingProfileRequest"
+      responses:
+        "200":
+          description: Pricing profile created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricingProfile"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/trpc/pricingProfile.getAll:
+    get:
+      tags:
+        - Pricing Profiles
+      summary: Get all pricing profiles
+      description: Retrieves all pricing profiles ordered by title with product counts
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of pricing profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PricingProfileWithCount"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/trpc/pricingProfile.getById:
+    get:
+      tags:
+        - Pricing Profiles
+      summary: Get pricing profile by ID
+      description: Retrieves a single pricing profile with associated products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Pricing profile UUID
+      responses:
+        "200":
+          description: Pricing profile details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricingProfileWithProducts"
+        "400":
+          description: Invalid ID format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Pricing profile not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/trpc/pricingProfile.delete:
+    delete:
+      tags:
+        - Pricing Profiles
+      summary: Delete a pricing profile
+      description: Deletes a pricing profile by ID
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  description: Pricing profile UUID
+      responses:
+        "200":
+          description: Pricing profile deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricingProfile"
+        "400":
+          description: Invalid ID format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Pricing profile not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

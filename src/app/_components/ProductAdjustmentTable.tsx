@@ -86,7 +86,7 @@ export default function ProductAdjustmentTable({
             <div>{p.categoryId}</div>
 
             <div className="font-medium text-gray-600">
-              ${calculatedBasePrice}
+              ${calculatedBasePrice.toFixed(2)}
             </div>
 
             <div className="rounded border border-green-600 bg-green-50 px-3 py-1 font-medium text-gray-700">

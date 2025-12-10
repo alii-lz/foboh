@@ -112,6 +112,36 @@ export default function Home() {
   const { data: products, isLoading: isLoadingProducts } =
     api.product.getAll.useQuery();
 
+  const fuzzyMatch = (
+    text: string,
+    search: string,
+    threshold: number,
+  ): boolean => {
+    if (!search) return true;
+    if (!text) return false;
+
+    const lowerText = text.toLowerCase();
+    const lowerSearch = search.toLowerCase();
+
+    if (lowerText.includes(lowerSearch)) return true;
+
+    let searchIndex = 0;
+    let score = 0;
+
+    for (
+      let i = 0;
+      i < lowerText.length && searchIndex < lowerSearch.length;
+      i++
+    ) {
+      if (lowerText[i] === lowerSearch[searchIndex]) {
+        score++;
+        searchIndex++;
+      }
+    }
+
+    return score / lowerSearch.length >= threshold;
+  };
+
   const filteredProducts = products
     ? products.filter((product) => {
         const title = product.title?.toLowerCase() ?? "";
@@ -140,9 +170,9 @@ export default function Home() {
         const matchesSearch =
           searchTerm === "" ||
           wildcardMatch(title, searchTerm) ||
-          title.includes(searchTerm.toLowerCase()) ||
+          fuzzyMatch(title, searchTerm, 0.7) ||
           wildcardMatch(sku, searchTerm) ||
-          sku.includes(searchTerm.toLowerCase());
+          fuzzyMatch(sku, searchTerm, 0.7);
 
         const matchesBrand =
           selectedBrand === "" || brand === selectedBrand.toLowerCase().trim();
@@ -158,7 +188,8 @@ export default function Home() {
         const matchesSku =
           selectedSku === "" ||
           wildcardMatch(sku, selectedSku) ||
-          sku.includes(selectedSku.toLowerCase());
+          sku.includes(selectedSku.toLowerCase()) ||
+          fuzzyMatch(sku, selectedSku, 0.7);
 
         return (
           matchesSearch &&

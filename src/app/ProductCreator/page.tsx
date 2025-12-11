@@ -18,11 +18,10 @@ interface Product {
 }
 
 export default function ProductCreator() {
-  const [editingId, setEditingId] = useState<string | null>(null);
-
   const utils = api.useUtils();
   const { data: products, isLoading } = api.product.getAll.useQuery();
 
+  const [editingId, setEditingId] = useState<string | null>(null);
   const createProduct = api.product.create.useMutation({
     onSuccess: () => {
       void utils.product.getAll.invalidate();

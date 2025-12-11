@@ -45,11 +45,16 @@ export const authConfig = {
       },
     }),
     async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
+      if (url.includes("/api/auth/callback")) {
+        return `${baseUrl}/Dashboard`;
+      }
+
       if (url.startsWith("/")) return `${baseUrl}${url}`;
+
       // Allows callback URLs on the same origin
       if (new URL(url).origin === baseUrl) return url;
-      // Default redirect after sign in
+
+      // Default to Dashboard
       return `${baseUrl}/Dashboard`;
     },
   },

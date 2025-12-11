@@ -10,7 +10,7 @@ export default function Navbar() {
   const user = session?.user;
 
   const firstName = user?.name ? user.name.split(" ")[0] : "User";
-  const lastName = user?.name ? user.name.split(" ")[1] || "" : "";
+  const lastName = user?.name ? (user.name.split(" ")[1] ?? "") : "";
 
   const formattedDate = today.toLocaleDateString("en-US", {
     weekday: "long",
@@ -20,7 +20,7 @@ export default function Navbar() {
   });
 
   const handleLogout = () => {
-    signOut({ callbackUrl: "/" });
+    void signOut({ callbackUrl: "/" });
   };
 
   return (

@@ -44,21 +44,5 @@ export const authConfig = {
         id: user.id,
       },
     }),
-    async redirect({ url, baseUrl }) {
-      if (url.includes("/api/auth/callback")) {
-        return `${baseUrl}/Dashboard`;
-      }
-
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-
-      // Allows callback URLs on the same origin
-      if (new URL(url).origin === baseUrl) return url;
-
-      // Default to Dashboard
-      return `${baseUrl}/Dashboard`;
-    },
-  },
-  pages: {
-    signIn: "/",
   },
 } satisfies NextAuthConfig;
